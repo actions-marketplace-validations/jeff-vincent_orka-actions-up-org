@@ -1,0 +1,64 @@
+name: 'orka-actions-up'
+description: 'spin up an orka actions runner'
+runs:
+  using: "composite"
+  steps:
+    - id: runner-up
+      run: |
+        export VM_NAME=$(LC_ALL=C tr -dc a-z </dev/urandom | head -c 10)
+        echo "::set-output name=vm-name::$(echo $VM_NAME)"
+        ${{ github.action_path }}/connect.sh
+        python3 ${{ github.action_path }}/main.py
+      shell: bash
+      env:
+        INPUT_ORKA_USER: ${{ inputs.orkaUser }}
+        INPUT_ORKA_PASS: ${{ inputs.orkaPass }}
+        INPUT_ORKA_BASE_IMAGE: ${{ inputs.orkaBaseImage }}
+        INPUT_GITHUB_PAT: ${{ inputs.githubPat }}
+        INPUT_GITHUB_ORG: ${{ inputs.githubOrg }}
+        INPUT_VCPU_COUNT: ${{ inputs.vcpuCount }}
+        INPUT_CORE_COUNT: ${{ inputs.coreCount }}
+        VPN_PASSWORD: ${{ inputs.vpnPassword }}
+        VPN_USER: ${{ inputs.vpnUser }}
+        VPN_ADDRESS: ${{ inputs.vpnAddress }}
+        VPN_SERVER_CERT: ${{ inputs.vpnServerCert }}
+
+inputs:
+  orkaUser:
+    description: "Your Orka username"
+    required: true
+  orkaPass:
+    description: "Your orka password"
+    required: true
+  orkaBaseImage:
+    description: "The Orka base image name"
+    required: true
+  vcpuCount:
+    description: "The number of vcpus for the agent"
+    required: true
+  coreCount:
+    description: "The number of cores for the agent"
+    required: true
+  githubPat:
+    description: "Your GitHub personal access token"
+    required: true
+  githubOrg:
+    description: "Your org"
+    required: true
+  vpnPassword:
+    description: "Your VPN password"
+    required: true
+  vpnUser:
+    description: "VPN username"
+    required: true
+  vpnAddress:
+    description: "VPN IP Address"
+    required: true
+  vpnServerCert:
+    description: "The server cert value for your VPN server"
+    required: true
+outputs:
+  vm-name:
+    description: "VM name"
+    value: ${{ steps.runner-up.outputs.vm-name }}
+    
