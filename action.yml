@@ -1,4 +1,4 @@
-name: 'orka-actions-up'
+name: 'orka-actions-up-org'
 description: 'spin up an orka actions runner'
 runs:
   using: "composite"
